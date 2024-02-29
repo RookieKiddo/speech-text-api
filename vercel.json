@@ -1,0 +1,14 @@
+{
+    "builds": [
+        {
+            "src": "api/speech-recognition-flask.py",
+            "use": "@vercel/python"
+        }
+    ],
+    "routes": [
+        {
+            "src" : "/(.*)",
+            "dest": "api/speech-recognition-flask.py"
+        }
+    ]
+}
