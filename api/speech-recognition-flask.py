@@ -1,16 +1,27 @@
 from flask import Flask, request, jsonify
 import speech_recognition as spr
 from translate import Translator
+from pydub import AudioSegment
 from flask_cors import CORS
+from io import BytesIO
 
 app = Flask(__name__)
 CORS(app)
 
 def recognize(input_audio_file):
+    # Convert audio file to wav using Pydub
+    audio = AudioSegment.from_file(input_audio_file)
+    
+    # Convert AudioSegment to bytes
+    buffer = BytesIO()
+    audio.export(buffer, format="wav")
+    buffer.seek(0)
+    
+
     recognizer = spr.Recognizer()
     text = ""  # Initialize text variable to return it even in case of exceptions
 
-    with spr.AudioFile(input_audio_file) as source:
+    with spr.AudioFile(buffer) as source:
         audio_data = recognizer.record(source)
         try:
             text = recognizer.recognize_google(audio_data, language='ur-PK')
